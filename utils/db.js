@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb');
+const { hashPassword } = require('./utils');
 
 class DBClient {
   constructor() {
@@ -29,6 +30,31 @@ class DBClient {
     await this.client.connect();
     const users = await this.client.db(this.database).collection('files').countDocuments();
     return users;
+  }
+
+  /* Custom methods go here */
+  async createUser(email, password) {
+    const hashPwd = hashPassword(password);
+    await this.client.connect();
+    const user = await this.client.db(this.database).collection('users').insertOne({ email, password: hashPwd });
+    return user;
+  }
+
+  async getUser(email) {
+    await this.client.connect();
+    const users = await this.client.db(this.database).collection('users').find({ email }).toArray();
+    if (!users.length) {
+      return null;
+    }
+    return users[0];
+  }
+
+  async userExists(email) {
+    const user = await this.getUser(email);
+    if (user) {
+      return true;
+    }
+    return false;
   }
 }
 
