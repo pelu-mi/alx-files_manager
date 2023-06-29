@@ -56,6 +56,14 @@ class DBClient {
     }
     return false;
   }
+
+  async usersCollection() {
+    return this.client.db(this.database).collection('users');
+  }
+
+  async filesCollection() {
+    return this.client.db(this.database).collection('files');
+  }
 }
 
 const dbClient = new DBClient();
