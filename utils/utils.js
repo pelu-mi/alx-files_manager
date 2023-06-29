@@ -1,5 +1,5 @@
-const { createHash } = require('crypto');
+import sha1 from 'sha1';
 
-export const hashPassword = (password) => createHash('sha1').update(password).digest('hex');
+export const hashPassword = (password) => sha1(password);
 
 export const sampleExport = 0;
